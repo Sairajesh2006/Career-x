@@ -505,7 +505,13 @@ export default function App() {
           )}
 
           {activeModule === 'ai-assistant' && (
-            <AiAssistantModule student={student} messages={aiChats} />
+            <AiAssistantModule
+              student={student}
+              messages={aiChats}
+              applications={applications}
+              resumeAnalyses={resumeAnalyses}
+              mockInterviews={mockInterviews}
+            />
           )}
 
           {activeModule === 'resume-analyzer' && (

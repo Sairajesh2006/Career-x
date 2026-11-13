@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { CheckCircle2, Radar, Sparkles } from 'lucide-react';
 import { motion } from 'motion/react';
 import { SKILL_DIMENSIONS } from '../../data/curriculum';
+import { postAiJson } from '../../services/aiClient';
 import { saveSkillAssessmentProgress } from '../../services/studentService';
 import { StudentProfile } from '../../types/careerx';
 
@@ -50,20 +51,13 @@ export const SkillAnalyzerModule: React.FC<SkillAnalyzerModuleProps> = ({
     try {
       let summary = `Skill assessment updated (average proficiency: ${avgScore}%).`;
       try {
-        const res = await fetch('/api/ai/skill-gap', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            preferredRole: student.preferredRole,
-            skillLevel: student.skillLevel,
-            languages: student.languages,
-            skillAssessments: scores,
-          }),
+        const data = await postAiJson<{ summary?: string }>('/api/ai/skill-gap', {
+          preferredRole: student.preferredRole,
+          skillLevel: student.skillLevel,
+          languages: student.languages,
+          skillAssessments: scores,
         });
-        if (res.ok) {
-          const data = (await res.json()) as { summary?: string };
-          if (data.summary) summary = data.summary;
-        }
+        if (data.summary) summary = data.summary;
       } catch {
         // Fallback summary still saves assessment reliably to Firestore
       }

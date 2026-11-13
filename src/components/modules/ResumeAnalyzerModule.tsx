@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { CheckCircle2, FileText, Sparkles, Upload, XCircle } from 'lucide-react';
 import { motion } from 'motion/react';
+import { postAiJson } from '../../services/aiClient';
 import { saveResumeAnalysisResult } from '../../services/studentService';
 import { ResumeAnalysis, StudentProfile } from '../../types/careerx';
 
@@ -51,31 +52,25 @@ export const ResumeAnalyzerModule: React.FC<ResumeAnalyzerModuleProps> = ({
 
     setAnalyzing(true);
     try {
-      const response = await fetch('/api/ai/analyze-resume', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          resumeText,
-          targetRole,
-          studentProfile: {
-            preferredRole: student.preferredRole,
-            languages: student.languages,
-            branch: student.branch,
-          },
-        }),
-      });
-      const data = (await response.json()) as {
+      const data = await postAiJson<{
         atsScore?: number;
         matchedKeywords?: string[];
         missingKeywords?: string[];
         strengths?: string[];
         improvements?: string[];
         summary?: string;
-        error?: string;
-      };
+      }>('/api/ai/analyze-resume', {
+        resumeText,
+        targetRole,
+        studentProfile: {
+          preferredRole: student.preferredRole,
+          languages: student.languages,
+          branch: student.branch,
+        },
+      });
 
-      if (!response.ok || typeof data.atsScore !== 'number') {
-        throw new Error(data.error || 'Resume analysis failed.');
+      if (typeof data.atsScore !== 'number') {
+        throw new Error('Resume analysis returned an incomplete response.');
       }
 
       await saveResumeAnalysisResult(

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Award, CheckCircle2, MessageSquareCode, Play, Sparkles } from 'lucide-react';
 import { motion } from 'motion/react';
+import { postAiJson } from '../../services/aiClient';
 import { saveMockInterviewResult } from '../../services/studentService';
 import {
   DifficultyLevel,
@@ -55,19 +56,17 @@ export const MockInterviewModule: React.FC<MockInterviewModuleProps> = ({
     setAnswers({});
 
     try {
-      const res = await fetch('/api/ai/mock-interview/questions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+      const data = await postAiJson<{ questions?: GeneratedQuestion[] }>(
+        '/api/ai/mock-interview/questions',
+        {
           interviewType,
           topic,
           difficulty,
           preferredRole: student.preferredRole,
-        }),
-      });
-      const data = (await res.json()) as { questions?: GeneratedQuestion[]; error?: string };
-      if (!res.ok || !Array.isArray(data.questions) || data.questions.length === 0) {
-        throw new Error(data.error || 'Could not generate interview questions.');
+        }
+      );
+      if (!Array.isArray(data.questions) || data.questions.length === 0) {
+        throw new Error('Could not generate interview questions.');
       }
       setQuestions(data.questions);
     } catch (err) {
@@ -88,26 +87,20 @@ export const MockInterviewModule: React.FC<MockInterviewModuleProps> = ({
         answer: answers[q.id] || '',
       }));
 
-      const res = await fetch('/api/ai/mock-interview/evaluate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          interviewType,
-          topic,
-          difficulty,
-          qaPairs,
-        }),
-      });
-      const data = (await res.json()) as {
+      const data = await postAiJson<{
         score?: number;
         feedback?: string;
         strengths?: string[];
         weaknesses?: string[];
-        error?: string;
-      };
+      }>('/api/ai/mock-interview/evaluate', {
+        interviewType,
+        topic,
+        difficulty,
+        qaPairs,
+      });
 
-      if (!res.ok || typeof data.score !== 'number') {
-        throw new Error(data.error || 'Evaluation failed.');
+      if (typeof data.score !== 'number') {
+        throw new Error('Evaluation returned an incomplete response.');
       }
 
       await saveMockInterviewResult(

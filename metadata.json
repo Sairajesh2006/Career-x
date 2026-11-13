@@ -2,5 +2,7 @@
   "name": "Career-X | Smart Placement Tracker",
   "description": "Multi-user intelligent student placement preparation platform with Firebase Authentication, persistent Firestore progress tracking, AI career mentoring, ATS resume diagnostics, and mock interview practice.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }
