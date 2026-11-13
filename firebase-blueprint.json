@@ -1,0 +1,438 @@
+{
+  "entities": {
+    "StudentProfile": {
+      "title": "StudentProfile",
+      "description": "Private student profile, academic details, and placement preparation progress keyed by Firebase Auth UID.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "description": "Firebase Auth UID of the student."
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "maxLength": 200,
+          "description": "Verified student email address."
+        },
+        "fullName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "description": "Full name of the student."
+        },
+        "college": {
+          "type": "string",
+          "maxLength": 180,
+          "description": "College or university name."
+        },
+        "degree": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Academic degree (e.g., B.Tech, B.E., MCA)."
+        },
+        "branch": {
+          "type": "string",
+          "maxLength": 120,
+          "description": "Academic branch or major."
+        },
+        "academicYear": {
+          "type": "string",
+          "maxLength": 60,
+          "description": "Current academic year or semester."
+        },
+        "cgpa": {
+          "type": "number",
+          "description": "Current CGPA on a 10-point scale."
+        },
+        "targetPackage": {
+          "type": "string",
+          "maxLength": 60,
+          "description": "Target placement compensation package."
+        },
+        "preferredRole": {
+          "type": "string",
+          "maxLength": 120,
+          "description": "Preferred job role for placement."
+        },
+        "languages": {
+          "type": "array",
+          "description": "Programming languages known by the student (max 15)."
+        },
+        "skillLevel": {
+          "type": "string",
+          "enum": ["", "Beginner", "Intermediate", "Advanced"],
+          "description": "Self-identified technical skill level."
+        },
+        "profileCompleted": {
+          "type": "boolean",
+          "description": "Whether the student completed first-time onboarding."
+        },
+        "readinessScore": {
+          "type": "number",
+          "description": "Calculated placement readiness score from 0 to 100."
+        },
+        "questionsSolved": {
+          "type": "number",
+          "description": "Total coding and prep questions solved."
+        },
+        "xp": {
+          "type": "number",
+          "description": "Total experience points earned."
+        },
+        "currentStreak": {
+          "type": "number",
+          "description": "Consecutive active learning days."
+        },
+        "longestStreak": {
+          "type": "number",
+          "description": "Longest recorded learning streak."
+        },
+        "lastActiveDate": {
+          "type": "string",
+          "maxLength": 20,
+          "description": "YYYY-MM-DD date of last recorded preparation activity."
+        },
+        "badges": {
+          "type": "array",
+          "description": "Unlocked achievement badge IDs (max 30)."
+        },
+        "completedRoadmapTaskIds": {
+          "type": "array",
+          "description": "IDs of completed roadmap tasks (max 100)."
+        },
+        "solvedQuestionIds": {
+          "type": "array",
+          "description": "IDs of completed company/DSA questions (max 500)."
+        },
+        "skillAssessments": {
+          "type": "object",
+          "description": "Map of skill category keys to proficiency scores (0-100)."
+        },
+        "skillGapSummary": {
+          "type": "string",
+          "maxLength": 2000,
+          "description": "Latest AI-generated skill gap diagnostic summary."
+        },
+        "activityDates": {
+          "type": "array",
+          "description": "Active calendar dates in YYYY-MM-DD format (max 365)."
+        },
+        "showOnLeaderboard": {
+          "type": "boolean",
+          "description": "Opt-in toggle for non-PII campus leaderboard."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when student account record was created."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when student account record was last updated."
+        }
+      },
+      "required": [
+        "uid",
+        "email",
+        "fullName",
+        "profileCompleted",
+        "readinessScore",
+        "questionsSolved",
+        "xp",
+        "currentStreak",
+        "longestStreak",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "JobApplication": {
+      "title": "JobApplication",
+      "description": "Student placement job application tracked in the pipeline.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "company": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "role": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "packageLpa": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "location": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "Wishlist",
+            "Applied",
+            "OA / Assessment",
+            "Technical Interview",
+            "HR Round",
+            "Offer",
+            "Rejected"
+          ]
+        },
+        "appliedDate": {
+          "type": "string",
+          "maxLength": 20
+        },
+        "notes": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["uid", "company", "role", "status", "appliedDate", "createdAt", "updatedAt"]
+    },
+    "ResumeAnalysis": {
+      "title": "ResumeAnalysis",
+      "description": "Saved ATS resume diagnostic result.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "fileName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 150
+        },
+        "targetRole": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "atsScore": {
+          "type": "number"
+        },
+        "matchedKeywords": {
+          "type": "array"
+        },
+        "missingKeywords": {
+          "type": "array"
+        },
+        "strengths": {
+          "type": "array"
+        },
+        "improvements": {
+          "type": "array"
+        },
+        "summary": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["uid", "fileName", "targetRole", "atsScore", "summary", "createdAt"]
+    },
+    "MockInterview": {
+      "title": "MockInterview",
+      "description": "Completed AI mock interview session and evaluation.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "interviewType": {
+          "type": "string",
+          "enum": ["DSA & Coding", "Core CS & System Design", "Behavioral & HR", "Full-Stack Role"]
+        },
+        "topic": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 150
+        },
+        "difficulty": {
+          "type": "string",
+          "enum": ["Easy", "Medium", "Hard"]
+        },
+        "score": {
+          "type": "number"
+        },
+        "questionsCount": {
+          "type": "number"
+        },
+        "feedback": {
+          "type": "string",
+          "maxLength": 3000
+        },
+        "strengths": {
+          "type": "array"
+        },
+        "weaknesses": {
+          "type": "array"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["uid", "interviewType", "topic", "difficulty", "score", "questionsCount", "feedback", "createdAt"]
+    },
+    "ActivityLog": {
+      "title": "ActivityLog",
+      "description": "Timestamped learning activity entry for a student.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "action": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "category": {
+          "type": "string",
+          "enum": ["Roadmap", "Coding", "Application", "Resume", "Interview", "Skill", "Streak"]
+        },
+        "xpEarned": {
+          "type": "number"
+        },
+        "date": {
+          "type": "string",
+          "maxLength": 20
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["uid", "action", "category", "xpEarned", "date", "createdAt"]
+    },
+    "AiChatMessage": {
+      "title": "AiChatMessage",
+      "description": "Persisted message in the AI Career Assistant chat.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "role": {
+          "type": "string",
+          "enum": ["user", "assistant"]
+        },
+        "content": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8000
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["uid", "role", "content", "createdAt"]
+    },
+    "LeaderboardEntry": {
+      "title": "LeaderboardEntry",
+      "description": "Non-PII public ranking summary for opted-in students.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "college": {
+          "type": "string",
+          "maxLength": 180
+        },
+        "preferredRole": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "xp": {
+          "type": "number"
+        },
+        "currentStreak": {
+          "type": "number"
+        },
+        "questionsSolved": {
+          "type": "number"
+        },
+        "readinessScore": {
+          "type": "number"
+        },
+        "isPublic": {
+          "type": "boolean"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["uid", "displayName", "xp", "currentStreak", "questionsSolved", "readinessScore", "isPublic", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/students/{userId}": {
+      "schema": { "$ref": "#/entities/StudentProfile" },
+      "description": "Private student profile and placement preparation metrics."
+    },
+    "/students/{userId}/applications/{applicationId}": {
+      "schema": { "$ref": "#/entities/JobApplication" },
+      "description": "Student job applications and interview pipeline stages."
+    },
+    "/students/{userId}/resumeAnalyses/{analysisId}": {
+      "schema": { "$ref": "#/entities/ResumeAnalysis" },
+      "description": "Student ATS resume analysis reports."
+    },
+    "/students/{userId}/mockInterviews/{interviewId}": {
+      "schema": { "$ref": "#/entities/MockInterview" },
+      "description": "Student AI mock interview evaluations."
+    },
+    "/students/{userId}/activityLogs/{logId}": {
+      "schema": { "$ref": "#/entities/ActivityLog" },
+      "description": "Student daily learning activity history."
+    },
+    "/students/{userId}/aiChats/{messageId}": {
+      "schema": { "$ref": "#/entities/AiChatMessage" },
+      "description": "Student AI Career Assistant conversation history."
+    },
+    "/leaderboard/{userId}": {
+      "schema": { "$ref": "#/entities/LeaderboardEntry" },
+      "description": "Non-PII public leaderboard entries for opted-in students."
+    }
+  }
+}
